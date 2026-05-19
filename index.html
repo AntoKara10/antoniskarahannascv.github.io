@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Finance × Automation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --ink2: #3a3a3a;
+    --ink3: #7a7a7a;
+    --surface: #f7f5f0;
+    --surface2: #edeae3;
+    --accent: #1a472a;
+    --accent2: #c8a96e;
+    --white: #fefefe;
+    --excel: #217346;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'Inter', sans-serif;
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--surface);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem;
+    height: 64px;
+    background: rgba(247,245,240,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--surface2);
+  }
+  .nav-logo { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--ink2); letter-spacing: 0.04em; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { font-size: 13px; font-weight: 400; color: var(--ink3); text-decoration: none; letter-spacing: 0.02em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--white); background: var(--accent); padding: 8px 18px; border-radius: 6px; text-decoration: none; letter-spacing: 0.04em; transition: opacity 0.2s; }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 3rem 4rem; position: relative; overflow: hidden; }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--surface2) 1px, transparent 1px), linear-gradient(90deg, var(--surface2) 1px, transparent 1px); background-size: 48px 48px; opacity: 0.5; }
+  .hero-content { position: relative; max-width: 860px; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--accent); background: rgba(26,71,42,0.08); padding: 6px 14px; border-radius: 100px; margin-bottom: 2rem; border: 1px solid rgba(26,71,42,0.15); }
+  .hero-tag span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  .hero h1 { font-family: var(--serif); font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 1.5rem; font-weight: 400; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: 18px; line-height: 1.7; color: var(--ink2); max-width: 560px; font-weight: 300; margin-bottom: 3rem; }
+  .hero-stats { display: flex; gap: 3rem; }
+  .hero-stat-label { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .hero-stat-value { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; }
+  .hero-scroll { position: absolute; bottom: 3rem; left: 3rem; display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.06em; }
+  .hero-scroll-line { width: 40px; height: 1px; background: var(--ink3); animation: scrollline 2s ease-in-out infinite; }
+  @keyframes scrollline { 0%,100%{width:40px;opacity:1} 50%{width:16px;opacity:0.4} }
+
+  /* SECTION COMMON */
+  section { padding: 6rem 3rem; }
+  .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem; }
+  .section-title { font-family: var(--serif); font-size: clamp(2rem, 3.5vw, 3rem); color: var(--ink); font-weight: 400; margin-bottom: 3rem; }
+
+  /* ABOUT */
+  .about { background: var(--white); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+  .about-text p { font-size: 16px; line-height: 1.8; color: var(--ink2); font-weight: 300; margin-bottom: 1.25rem; }
+  .about-text p strong { color: var(--ink); font-weight: 500; }
+  .about-skills { display: flex; flex-direction: column; gap: 1.25rem; }
+  .skill-row { display: flex; flex-direction: column; gap: 6px; }
+  .skill-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; color: var(--ink2); }
+  .skill-pct { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
+  .skill-bar { height: 3px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+  .skill-fill { height: 100%; background: var(--accent); border-radius: 99px; width: 0; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+  /* PROJECTS */
+  .projects { background: var(--surface); }
+  .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .project-card { background: var(--white); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--surface2); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s; cursor: pointer; position: relative; }
+  .project-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
+  .project-card.featured { grid-column: span 2; }
+  .card-visual { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .card-visual.featured-vis { height: 280px; }
+  .card-visual.powerbi { background: #0e1117; }
+  .card-visual.investing { background: #0a1628; }
+  .card-visual.car { background: #111827; }
+  .card-visual.agent { background: #0f0f1a; }
+  .card-visual.excel-vis { background: #0d1f14; }
+
+  /* PowerBI Visual */
+  .pbi-demo { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 20px; gap: 10px; }
+  .pbi-topbar { display: flex; gap: 8px; align-items: center; }
+  .pbi-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .pbi-title { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 4px; }
+  .pbi-content { flex: 1; display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+  .pbi-filters { display: flex; flex-direction: column; gap: 6px; }
+  .pbi-filter { background: rgba(255,255,255,0.06); border-radius: 4px; padding: 6px 8px; }
+  .pbi-filter-label { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.35); margin-bottom: 3px; }
+  .pbi-slicer { height: 3px; background: rgba(255,255,255,0.1); border-radius: 99px; position: relative; }
+  .pbi-slicer-fill { height: 100%; background: #f2c811; border-radius: 99px; }
+  .pbi-charts { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; }
+  .pbi-chart-block { background: rgba(255,255,255,0.04); border-radius: 4px; padding: 8px; }
+  .pbi-bars { display: flex; align-items: flex-end; gap: 4px; height: 48px; }
+  .pbi-bar { flex: 1; border-radius: 2px 2px 0 0; background: #f2c811; opacity: 0.8; transition: height 0.8s ease; }
+  .pbi-kpis { display: flex; gap: 6px; }
+  .pbi-kpi { flex: 1; background: rgba(242,200,17,0.12); border-radius: 3px; padding: 4px 6px; }
+  .pbi-kpi-val { font-family: var(--mono); font-size: 13px; color: #f2c811; font-weight: 500; }
+  .pbi-kpi-lbl { font-family: var(--mono); font-size: 8px; color: rgba(255,255,255,0.4); }
+  .refresh-btn { position: absolute; top: 16px; right: 16px; background: rgba(242,200,17,0.15); border: 1px solid rgba(242,200,17,0.3); color: #f2c811; font-family: var(--mono); font-size: 9px; padding: 5px 10px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background 0.2s; }
+  .refresh-btn:hover { background: rgba(242,200,17,0.25); }
+  .refresh-btn i { font-size: 10px; }
+  .refreshing i { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Investing Visual */
+  .inv-demo { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .inv-header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .inv-ticker { font-family: var(--mono); font-size: 22px; font-weight: 500; color: #fff; }
+  .inv-price { font-family: var(--mono); font-size: 13px; }
+  .inv-price.up { color: #4ade80; }
+  .inv-price.dn { color: #f87171; }
+  .inv-chart { flex: 1; position: relative; }
+  .inv-chart svg { width: 100%; height: 100%; }
+
+  /* Car Visual */
+  .car-demo { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .car-header { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; }
+  .car-plates { display: flex; gap: 8px; flex-wrap: wrap; }
+  .car-plate { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 6px 10px; }
+  .car-plate-id { font-family: var(--mono); font-size: 11px; color: #60a5fa; font-weight: 500; }
+  .car-plate-val { font-size: 10px; color: rgba(255,255,255,0.5); }
+  .car-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .car-metric { background: rgba(255,255,255,0.04); border-radius: 4px; padding: 8px; }
+  .car-metric-val { font-family: var(--mono); font-size: 14px; color: #fff; font-weight: 500; }
+  .car-metric-lbl { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.35); }
+  .car-bar-row { display: flex; flex-direction: column; gap: 4px; }
+  .car-bar-lbl { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.4); }
+  .car-bar-bg { height: 3px; background: rgba(255,255,255,0.08); border-radius: 99px; }
+  .car-bar-fill { height: 100%; border-radius: 99px; }
+
+  /* Agent Visual */
+  .agent-demo { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .agent-flow { display: flex; align-items: center; gap: 6px; }
+  .agent-node { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+  .agent-node-icon { font-size: 16px; }
+  .agent-node-lbl { font-family: var(--mono); font-size: 8px; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; text-align: center; }
+  .agent-arrow { color: rgba(255,255,255,0.2); font-size: 12px; }
+  .agent-log { flex: 1; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 10px; overflow: hidden; }
+  .agent-log-line { font-family: var(--mono); font-size: 10px; line-height: 1.8; }
+  .agent-log-line.dim { color: rgba(255,255,255,0.25); }
+  .agent-log-line.ok { color: #4ade80; }
+  .agent-log-line.info { color: #60a5fa; }
+  .agent-log-line.warn { color: #fbbf24; }
+  .cursor { animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Excel Visual */
+  .xl-demo { width: 100%; height: 100%; padding: 16px; display: flex; flex-direction: column; gap: 8px; font-family: var(--mono); }
+  .xl-toolbar { display: flex; align-items: center; gap: 6px; padding-bottom: 8px; border-bottom: 1px solid rgba(33,115,70,0.3); }
+  .xl-tab { font-size: 9px; padding: 3px 10px; border-radius: 3px 3px 0 0; color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.2s; }
+  .xl-tab.active { background: rgba(33,115,70,0.35); color: #4ade80; border-bottom: 2px solid #4ade80; }
+  .xl-formula-bar { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border-radius: 3px; padding: 4px 8px; }
+  .xl-cell-ref { font-size: 9px; color: rgba(255,255,255,0.3); min-width: 32px; }
+  .xl-formula { font-size: 9px; color: #4ade80; flex: 1; }
+  .xl-grid { flex: 1; display: flex; flex-direction: column; gap: 0; overflow: hidden; }
+  .xl-row { display: grid; grid-template-columns: 28px repeat(5, 1fr); }
+  .xl-cell { font-size: 9px; padding: 3px 5px; border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); white-space: nowrap; overflow: hidden; }
+  .xl-cell.hdr { background: rgba(33,115,70,0.2); color: rgba(255,255,255,0.5); text-align: center; font-weight: 500; }
+  .xl-cell.row-num { background: rgba(33,115,70,0.1); color: rgba(255,255,255,0.25); text-align: center; }
+  .xl-cell.label { color: rgba(255,255,255,0.6); }
+  .xl-cell.num { color: rgba(255,255,255,0.85); text-align: right; }
+  .xl-cell.formula { color: #4ade80; text-align: right; }
+  .xl-cell.selected { background: rgba(33,115,70,0.25); outline: 1px solid #4ade80; outline-offset: -1px; }
+  .xl-cell.total { background: rgba(33,115,70,0.15); color: #4ade80; text-align: right; font-weight: 500; border-top: 1px solid rgba(33,115,70,0.4); }
+  .xl-cell.total-lbl { background: rgba(33,115,70,0.15); color: rgba(255,255,255,0.5); font-weight: 500; }
+  .xl-mini-chart { display: flex; align-items: flex-end; gap: 2px; height: 28px; padding: 0 4px; }
+  .xl-mini-bar { flex: 1; border-radius: 1px 1px 0 0; background: rgba(33,115,70,0.6); transition: height 0.6s ease; }
+  .xl-status { display: flex; justify-content: space-between; padding-top: 6px; border-top: 1px solid rgba(33,115,70,0.2); }
+  .xl-status-item { font-size: 8px; color: rgba(255,255,255,0.3); }
+  .xl-status-item span { color: #4ade80; }
+
+  /* Shared card */
+  .card-body { padding: 1.5rem; }
+  .card-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); background: rgba(26,71,42,0.08); padding: 3px 8px; border-radius: 100px; display: inline-block; margin-bottom: 0.75rem; border: 1px solid rgba(26,71,42,0.12); }
+  .card-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: 0.5rem; }
+  .card-desc { font-size: 14px; line-height: 1.7; color: var(--ink2); font-weight: 300; margin-bottom: 1rem; }
+  .card-stack { display: flex; gap: 6px; flex-wrap: wrap; }
+  .stack-chip { font-family: var(--mono); font-size: 10px; color: var(--ink3); background: var(--surface2); padding: 3px 8px; border-radius: 4px; }
+
+  /* PIPELINE */
+  .pipeline { background: var(--ink); color: var(--white); }
+  .pipeline .section-label { color: rgba(255,255,255,0.3); }
+  .pipeline .section-title { color: var(--white); }
+  .pipeline-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+  .pipeline-step { padding: 2rem 1.5rem; position: relative; border-left: 1px solid rgba(255,255,255,0.08); opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+  .pipeline-step.visible { opacity: 1; transform: translateY(0); }
+  .pipeline-step:first-child { border-left: none; }
+  .step-num { font-family: var(--mono); font-size: 11px; color: var(--accent2); margin-bottom: 1rem; letter-spacing: 0.06em; }
+  .step-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+  .step-title { font-family: var(--serif); font-size: 1.1rem; color: var(--white); margin-bottom: 0.5rem; font-weight: 400; }
+  .step-desc { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.45); font-weight: 300; }
+  .step-connector { position: absolute; top: 2.4rem; right: -1px; width: 20px; height: 20px; background: var(--accent2); border-radius: 50%; z-index: 1; display: flex; align-items: center; justify-content: center; }
+  .step-connector i { font-size: 8px; color: var(--ink); }
+
+  /* CONTACT */
+  .contact { background: var(--white); text-align: center; }
+  .contact-inner { max-width: 560px; margin: 0 auto; }
+  .contact-sub { font-size: 16px; color: var(--ink2); font-weight: 300; line-height: 1.7; margin-bottom: 2.5rem; }
+  .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .contact-link { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+  .contact-link.primary { background: var(--accent); color: #fff; }
+  .contact-link.primary:hover { opacity: 0.88; }
+  .contact-link.secondary { border: 1px solid var(--surface2); color: var(--ink2); }
+  .contact-link.secondary:hover { border-color: var(--ink3); color: var(--ink); }
+
+  /* FOOTER */
+  footer { padding: 2rem 3rem; border-top: 1px solid var(--surface2); display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+  .footer-back { font-family: var(--mono); font-size: 11px; color: var(--ink3); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+  .footer-back:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">portfolio.v1</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#pipeline">How it works</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="nav-cta">Get in touch →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span></span>
+      CPA · Excel · Power BI · Python · AI Automation
+    </div>
+    <h1>Finance meets<br><em>automation.</em></h1>
+    <p class="hero-sub">I'm a Chartered Professional Accountant who builds the systems that make finance work faster — automated reporting pipelines, intelligent dashboards, and AI-powered tools that replace manual effort with one click.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-label">Credential</div>
+        <div class="hero-stat-value">CPA</div>
+      </div>
+      <div>
+        <div class="hero-stat-label">Projects</div>
+        <div class="hero-stat-value">5+</div>
+      </div>
+      <div>
+        <div class="hero-stat-label">Focus</div>
+        <div class="hero-stat-value" style="font-size:1.3rem">Reporting</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label">01 — About</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <h2 class="section-title">The accountant<br>who automates.</h2>
+      <p>My foundation is <strong>accounting and auditing</strong> — financial reporting, compliance, and the discipline of making numbers tell the truth. That hasn't changed.</p>
+      <p>What changed is how I do it. I got tired of repetitive processes, inconsistent outputs, and reports that took hours to build. So I learned to <strong>build the infrastructure</strong> around the work: Excel models, Power BI pipelines, Python automation, PWA apps, and AI agents that run on a schedule.</p>
+      <p>The result is reporting that refreshes with a single click, insights delivered before you ask for them, and audit-ready consistency by design — not by luck.</p>
+    </div>
+    <div class="about-skills">
+      <div class="skill-row">
+        <div class="skill-label"><span>Financial Reporting & Analysis</span><span class="skill-pct">95%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>Excel — Modelling & Automation</span><span class="skill-pct">93%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>Power BI & DAX</span><span class="skill-pct">88%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>Data Modelling & ETL</span><span class="skill-pct">85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>Python Automation</span><span class="skill-pct">82%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>AI Agent Development</span><span class="skill-pct">75%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-label"><span>PWA / App Development</span><span class="skill-pct">70%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="70"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="section-label">02 — Projects</div>
+  <h2 class="section-title">Built, not described.</h2>
+
+  <div class="projects-grid">
+
+    <!-- PowerBI - Featured -->
+    <div class="project-card featured">
+      <div class="card-visual powerbi featured-vis">
+        <div class="pbi-demo">
+          <div class="pbi-topbar">
+            <div class="pbi-dot" style="background:#ff5f57"></div>
+            <div class="pbi-dot" style="background:#ffbd2e"></div>
+            <div class="pbi-dot" style="background:#28c840"></div>
+            <div class="pbi-title">Financial Dashboard · FY2025</div>
+          </div>
+          <div class="pbi-content">
+            <div class="pbi-filters">
+              <div class="pbi-filter">
+                <div class="pbi-filter-label">DATE RANGE</div>
+                <div class="pbi-slicer"><div class="pbi-slicer-fill" style="width:70%"></div></div>
+              </div>
+              <div class="pbi-filter">
+                <div class="pbi-filter-label">DEPARTMENT</div>
+                <div class="pbi-slicer"><div class="pbi-slicer-fill" style="width:40%"></div></div>
+              </div>
+              <div class="pbi-filter">
+                <div class="pbi-filter-label">CATEGORY</div>
+                <div class="pbi-slicer"><div class="pbi-slicer-fill" style="width:60%"></div></div>
+              </div>
+              <div class="pbi-kpis" style="margin-top:6px">
+                <div class="pbi-kpi"><div class="pbi-kpi-val" id="rev-kpi">€2.4M</div><div class="pbi-kpi-lbl">REVENUE</div></div>
+                <div class="pbi-kpi"><div class="pbi-kpi-val" id="exp-kpi">€1.1M</div><div class="pbi-kpi-lbl">EXPENSES</div></div>
+              </div>
+            </div>
+            <div class="pbi-charts">
+              <div class="pbi-chart-block">
+                <div style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.3);margin-bottom:6px">MONTHLY REVENUE</div>
+                <div class="pbi-bars" id="pbi-bars">
+                  <div class="pbi-bar" style="height:55%"></div>
+                  <div class="pbi-bar" style="height:70%"></div>
+                  <div class="pbi-bar" style="height:45%"></div>
+                  <div class="pbi-bar" style="height:85%"></div>
+                  <div class="pbi-bar" style="height:60%"></div>
+                  <div class="pbi-bar" style="height:95%"></div>
+                  <div class="pbi-bar" style="height:75%"></div>
+                  <div class="pbi-bar" style="height:80%"></div>
+                </div>
+              </div>
+              <div class="pbi-chart-block">
+                <div style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.3);margin-bottom:6px">EXPENSE BREAKDOWN</div>
+                <div style="display:flex;gap:6px;align-items:center;flex:1">
+                  <svg viewBox="0 0 60 60" width="60" height="60">
+                    <circle cx="30" cy="30" r="22" fill="none" stroke="#f2c811" stroke-width="6" stroke-dasharray="83 55" stroke-dashoffset="0"/>
+                    <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(242,200,17,0.35)" stroke-width="6" stroke-dasharray="55 83" stroke-dashoffset="-83"/>
+                  </svg>
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;background:#f2c811;border-radius:50%;display:inline-block"></span>Operational 60%</div>
+                    <div style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;background:rgba(242,200,17,0.35);border-radius:50%;display:inline-block"></span>Other 40%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="refresh-btn" id="refresh-btn" onclick="refreshPBI()">
+          <i class="fas fa-sync-alt" id="refresh-icon"></i> Refresh
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="card-tag">Power BI · Featured</div>
+        <div class="card-title">Automated Financial Reporting Pipeline</div>
+        <p class="card-desc">Raw data in, decision-ready report out — with one click. Standardised ETL transforms source data into a relational model. Date slicers, category filters, and drill-throughs make exploration instant. Click Refresh above to see it in action.</p>
+        <div class="card-stack">
+          <span class="stack-chip">Power BI</span>
+          <span class="stack-chip">DAX</span>
+          <span class="stack-chip">Power Query (M)</span>
+          <span class="stack-chip">Star Schema</span>
+          <span class="stack-chip">ETL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Excel - Featured -->
+    <div class="project-card featured">
+      <div class="card-visual excel-vis featured-vis">
+        <div class="xl-demo">
+          <div class="xl-toolbar">
+            <div class="xl-tab active" onclick="switchSheet('pl')">P&amp;L Model</div>
+            <div class="xl-tab" onclick="switchSheet('cf')">Cash Flow</div>
+            <div class="xl-tab" onclick="switchSheet('kpi')">KPI Dashboard</div>
+          </div>
+          <div class="xl-formula-bar">
+            <div class="xl-cell-ref" id="xl-ref">E9</div>
+            <div class="xl-formula" id="xl-formula">=SUM(E5:E8)</div>
+          </div>
+          <div class="xl-grid" id="xl-grid">
+            <!-- Rendered by JS -->
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-end;margin-top:4px">
+            <div style="flex:1">
+              <div style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.3);margin-bottom:4px">MONTHLY TREND</div>
+              <div class="xl-mini-chart" id="xl-chart"></div>
+            </div>
+            <div class="xl-status">
+              <div class="xl-status-item">Sum: <span id="xl-sum">€847,200</span></div>
+              <div class="xl-status-item" style="margin-left:12px">Avg: <span id="xl-avg">€141,200</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-tag">Excel · Foundation</div>
+        <div class="card-title">Financial Modelling & Automation</div>
+        <p class="card-desc">Excel remains the universal language of finance. This model covers P&L forecasting, cash flow projections, and KPI tracking — built with structured tables, dynamic named ranges, and formula logic that updates automatically as assumptions change. No macros needed; just clean, auditable workbook architecture.</p>
+        <div class="card-stack">
+          <span class="stack-chip">Excel</span>
+          <span class="stack-chip">Dynamic Arrays</span>
+          <span class="stack-chip">Power Query</span>
+          <span class="stack-chip">Structured Tables</span>
+          <span class="stack-chip">Financial Modelling</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investing -->
+    <div class="project-card">
+      <div class="card-visual investing">
+        <div class="inv-demo">
+          <div class="inv-header">
+            <div>
+              <div class="inv-ticker" id="inv-ticker">AAPL</div>
+              <div style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3)">Apple Inc. · NASDAQ</div>
+            </div>
+            <div style="text-align:right">
+              <div class="inv-price up" id="inv-price">$189.42</div>
+              <div class="inv-price up" style="font-size:10px" id="inv-chg">+2.14 (1.14%)</div>
+            </div>
+          </div>
+          <div class="inv-chart">
+            <svg viewBox="0 0 280 80" preserveAspectRatio="none" id="inv-svg">
+              <defs>
+                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4ade80" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path id="inv-area" fill="url(#chartGrad)" d=""/>
+              <path id="inv-line" fill="none" stroke="#4ade80" stroke-width="1.5" d=""/>
+            </svg>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:4px">
+            <div onclick="setStock('AAPL','$189.42','+2.14 (1.14%)',true)" style="font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;cursor:pointer;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3)">AAPL</div>
+            <div onclick="setStock('TSLA','$224.85','-3.20 (1.40%)',false)" style="font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;cursor:pointer;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08)">TSLA</div>
+            <div onclick="setStock('MSFT','$415.10','+5.42 (1.32%)',true)" style="font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;cursor:pointer;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08)">MSFT</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-tag">PWA App</div>
+        <div class="card-title">Investment Tracker</div>
+        <p class="card-desc">A progressive web app for tracking personal investments — portfolio performance, position sizing, and return calculations in a mobile-ready interface.</p>
+        <div class="card-stack">
+          <span class="stack-chip">PWA</span>
+          <span class="stack-chip">JavaScript</span>
+          <span class="stack-chip">APIs</span>
+          <span class="stack-chip">IndexedDB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Car Tracker -->
+    <div class="project-card">
+      <div class="card-visual car">
+        <div class="car-demo">
+          <div class="car-header">VEHICLE EXPENSE TRACKER · 2025</div>
+          <div class="car-plates">
+            <div class="car-plate"><div class="car-plate-id">ABC-1234</div><div class="car-plate-val">Primary</div></div>
+            <div class="car-plate"><div class="car-plate-id">XYZ-5678</div><div class="car-plate-val">Secondary</div></div>
+          </div>
+          <div class="car-metrics">
+            <div class="car-metric"><div class="car-metric-val">€3,240</div><div class="car-metric-lbl">YTD COSTS</div></div>
+            <div class="car-metric"><div class="car-metric-val">12,840</div><div class="car-metric-lbl">KM DRIVEN</div></div>
+            <div class="car-metric"><div class="car-metric-val">€0.25</div><div class="car-metric-lbl">COST / KM</div></div>
+            <div class="car-metric"><div class="car-metric-val">6.2L</div><div class="car-metric-lbl">AVG FUEL</div></div>
+          </div>
+          <div class="car-bar-row">
+            <div class="car-bar-lbl"><span>Fuel</span><span>€1,840</span></div>
+            <div class="car-bar-bg"><div class="car-bar-fill" style="width:57%;background:#60a5fa"></div></div>
+          </div>
+          <div class="car-bar-row">
+            <div class="car-bar-lbl"><span>Service</span><span>€920</span></div>
+            <div class="car-bar-bg"><div class="car-bar-fill" style="width:28%;background:#818cf8"></div></div>
+          </div>
+          <div class="car-bar-row">
+            <div class="car-bar-lbl"><span>Insurance</span><span>€480</span></div>
+            <div class="car-bar-bg"><div class="car-bar-fill" style="width:15%;background:#a78bfa"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-tag">PWA App</div>
+        <div class="card-title">Car Expense Tracker</div>
+        <p class="card-desc">Track fuel, service, insurance, and maintenance costs per vehicle. Calculates cost-per-km, flags anomalies, and generates expense summaries ready for tax reporting.</p>
+        <div class="card-stack">
+          <span class="stack-chip">PWA</span>
+          <span class="stack-chip">JavaScript</span>
+          <span class="stack-chip">Local Storage</span>
+          <span class="stack-chip">Charts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Agent -->
+    <div class="project-card" style="grid-column:span 2">
+      <div class="card-visual agent featured-vis">
+        <div class="agent-demo">
+          <div class="agent-flow">
+            <div class="agent-node"><div class="agent-node-icon">🕐</div><div class="agent-node-lbl">SCHEDULER</div></div>
+            <div class="agent-arrow">→</div>
+            <div class="agent-node"><div class="agent-node-icon">📡</div><div class="agent-node-lbl">DATA FETCH</div></div>
+            <div class="agent-arrow">→</div>
+            <div class="agent-node"><div class="agent-node-icon">🤖</div><div class="agent-node-lbl">AI ANALYSIS</div></div>
+            <div class="agent-arrow">→</div>
+            <div class="agent-node"><div class="agent-node-icon">📊</div><div class="agent-node-lbl">INSIGHT GEN</div></div>
+            <div class="agent-arrow">→</div>
+            <div class="agent-node"><div class="agent-node-icon">📧</div><div class="agent-node-lbl">EMAIL SEND</div></div>
+          </div>
+          <div class="agent-log">
+            <div class="agent-log-line dim">[ 08:00:00 ] Scheduler triggered — daily report job</div>
+            <div class="agent-log-line info">[ 08:00:01 ] Fetching portfolio data from API...</div>
+            <div class="agent-log-line ok">[ 08:00:03 ] Data loaded — 147 records processed</div>
+            <div class="agent-log-line info">[ 08:00:04 ] Running AI analysis on market conditions...</div>
+            <div class="agent-log-line ok" id="agent-insight">[ 08:00:08 ] Insight: Portfolio up 2.3% WoW — driven by tech</div>
+            <div class="agent-log-line ok">[ 08:00:09 ] Report compiled — 4 pages, 6 charts</div>
+            <div class="agent-log-line info">[ 08:00:10 ] Sending to 3 recipients...</div>
+            <div class="agent-log-line ok">[ 08:00:11 ] ✓ Delivered. Next run: tomorrow 08:00 <span class="cursor">█</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-tag">AI Agent · Automation</div>
+        <div class="card-title">Scheduled Reporting Agent</div>
+        <p class="card-desc">An AI agent that runs on a schedule, fetches live data, generates analysis using a language model, and emails a formatted report — completely hands-off. Includes an overall insight calculation that summarises key movements in plain language.</p>
+        <div class="card-stack">
+          <span class="stack-chip">Python</span>
+          <span class="stack-chip">Claude API</span>
+          <span class="stack-chip">SMTP</span>
+          <span class="stack-chip">Cron / Scheduler</span>
+          <span class="stack-chip">JSON</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="pipeline" id="pipeline">
+  <div class="section-label">03 — How it works</div>
+  <h2 class="section-title">From raw data to ready insight.</h2>
+  <div class="pipeline-steps">
+    <div class="pipeline-step" data-delay="0">
+      <div class="step-num">01</div>
+      <div class="step-icon">📥</div>
+      <div class="step-title">Raw data in</div>
+      <div class="step-desc">CSV exports, API responses, database tables — any format. The pipeline ingests it without manual prep.</div>
+      <div class="step-connector"><i class="fas fa-chevron-right"></i></div>
+    </div>
+    <div class="pipeline-step" data-delay="150">
+      <div class="step-num">02</div>
+      <div class="step-icon">⚙️</div>
+      <div class="step-title">Standardise</div>
+      <div class="step-desc">Power Query transforms normalise, clean, and type-cast every field. Consistency is enforced — not hoped for.</div>
+      <div class="step-connector"><i class="fas fa-chevron-right"></i></div>
+    </div>
+    <div class="pipeline-step" data-delay="300">
+      <div class="step-num">03</div>
+      <div class="step-icon">🔗</div>
+      <div class="step-title">Model</div>
+      <div class="step-desc">Fact and dimension tables connected via relationships. DAX measures calculated once, used everywhere.</div>
+      <div class="step-connector"><i class="fas fa-chevron-right"></i></div>
+    </div>
+    <div class="pipeline-step" data-delay="450">
+      <div class="step-num">04</div>
+      <div class="step-icon">📊</div>
+      <div class="step-title">Visualise</div>
+      <div class="step-desc">Interactive dashboards with date slicers, category filters, and drill-through. Click Refresh — done.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-label" style="text-align:center">04 — Contact</div>
+    <h2 class="section-title">Let's talk.</h2>
+    <p class="contact-sub">Whether you're looking for someone who understands financial reporting at depth, or someone who can automate what you're still doing by hand — I'm open to a conversation.</p>
+    <div class="contact-links">
+      <a href="mailto:your@email.com" class="contact-link primary"><i class="fas fa-envelope"></i> Get in touch</a>
+      <a href="https://linkedin.com" class="contact-link secondary"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      <a href="https://github.com" class="contact-link secondary"><i class="fab fa-github"></i> GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">© 2025 · Finance × Automation</div>
+  <a href="#top" class="footer-back"><i class="fas fa-arrow-up"></i> Back to top</a>
+</footer>
+
+<script>
+/* ── Skill bars ── */
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.skill-fill').forEach(f => f.style.width = f.dataset.width + '%');
+    }
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('.about-skills').forEach(el => skillObs.observe(el));
+
+/* ── Pipeline steps ── */
+const pipeObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.pipeline-step').forEach(s =>
+        setTimeout(() => s.classList.add('visible'), parseInt(s.dataset.delay || 0))
+      );
+    }
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('.pipeline-steps').forEach(el => pipeObs.observe(el));
+
+/* ── Power BI refresh ── */
+function refreshPBI() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('refreshing'); btn.disabled = true;
+  document.querySelectorAll('.pbi-bar').forEach(b => b.style.height = (Math.random() * 60 + 30) + '%');
+  const revs = ['€2.1M','€2.4M','€2.7M','€3.0M','€1.9M'];
+  const exps = ['€980K','€1.1M','€1.3M','€850K','€1.2M'];
+  document.getElementById('rev-kpi').textContent = revs[Math.floor(Math.random() * revs.length)];
+  document.getElementById('exp-kpi').textContent = exps[Math.floor(Math.random() * exps.length)];
+  setTimeout(() => { btn.classList.remove('refreshing'); btn.disabled = false; }, 1200);
+}
+
+/* ── Investment chart ── */
+function drawChart(isUp) {
+  const pts = []; let y = 50;
+  for (let i = 0; i <= 20; i++) {
+    y = Math.max(10, Math.min(70, y + (Math.random() - (isUp ? 0.38 : 0.62)) * 12));
+    pts.push([i * 14, 80 - y]);
+  }
+  const color = isUp ? '#4ade80' : '#f87171';
+  const line = pts.map((p,i) => (i===0?'M':'L') + p[0] + ' ' + p[1]).join(' ');
+  document.getElementById('inv-line').setAttribute('d', line);
+  document.getElementById('inv-line').setAttribute('stroke', color);
+  document.getElementById('inv-area').setAttribute('d', line + ' L' + pts[pts.length-1][0] + ' 80 L0 80 Z');
+  document.getElementById('inv-svg').querySelector('stop:first-child').setAttribute('stop-color', color);
+}
+function setStock(ticker, price, chg, isUp) {
+  document.getElementById('inv-ticker').textContent = ticker;
+  document.getElementById('inv-price').textContent = price;
+  document.getElementById('inv-chg').textContent = chg;
+  ['inv-price','inv-chg'].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = 'inv-price ' + (isUp ? 'up' : 'dn');
+  });
+  drawChart(isUp);
+}
+drawChart(true);
+
+/* ── Agent log cycling ── */
+const insights = [
+  'Portfolio up 2.3% WoW — driven by tech',
+  'Volatility spike detected — 3 positions flagged',
+  'Dividend income €340 received this week',
+  'Cash drag above threshold — consider rebalancing'
+];
+setInterval(() => {
+  const el = document.getElementById('agent-insight');
+  el.textContent = '[ 08:00:08 ] Insight: ' + insights[Math.floor(Math.random() * insights.length)];
+}, 3500);
+
+/* ── Excel demo ── */
+const sheets = {
+  pl: {
+    ref: 'E9', formula: '=SUM(E5:E8)',
+    headers: ['', 'Account', 'Q1', 'Q2', 'Q3', 'Total'],
+    rows: [
+      ['5', 'Revenue',      '€312,400', '€284,100', '€298,700', '€895,200'],
+      ['6', 'COGS',         '€(124,200)','€(108,900)','€(114,400)','€(347,500)'],
+      ['7', 'Gross Profit', '€188,200', '€175,200', '€184,300', '€547,700'],
+      ['8', 'OpEx',         '€(62,400)', '€(58,100)', '€(64,800)', '€(185,300)'],
+      ['9', 'EBIT',         '€125,800', '€117,100', '€119,500', '€362,400'],
+    ],
+    totals: ['', 'Net Margin', '40.3%', '41.2%', '40.0%', '40.5%'],
+    selected: [4, 5],
+    bars: [68, 55, 72, 48, 88, 62],
+    sum: '€847,200', avg: '€141,200'
+  },
+  cf: {
+    ref: 'E8', formula: '=E5+E6+E7',
+    headers: ['', 'Activity', 'Jan', 'Feb', 'Mar', 'Total'],
+    rows: [
+      ['5', 'Operating',    '€84,200',  '€76,400',  '€91,300',  '€251,900'],
+      ['6', 'Investing',    '€(22,500)','€(18,200)','€(31,400)','€(72,100)'],
+      ['7', 'Financing',    '€(15,000)','€(15,000)','€(15,000)','€(45,000)'],
+      ['8', 'Net Cash Flow','€46,700',  '€43,200',  '€44,900',  '€134,800'],
+    ],
+    totals: ['', 'Closing Balance', '€201,400', '€244,600', '€289,500', ''],
+    selected: [3, 5],
+    bars: [82, 74, 91, 66, 78, 85],
+    sum: '€134,800', avg: '€44,933'
+  },
+  kpi: {
+    ref: 'C6', formula: '=(C4-C5)/C5',
+    headers: ['', 'KPI', 'Actual', 'Budget', 'Variance', 'Status'],
+    rows: [
+      ['3', 'Revenue Growth', '12.4%', '10.0%', '+2.4pp', '✓'],
+      ['4', 'Gross Margin',   '61.2%', '60.0%', '+1.2pp', '✓'],
+      ['5', 'EBITDA Margin',  '38.7%', '40.0%', '-1.3pp', '△'],
+      ['6', 'DSO (days)',     '32',    '30',     '+2',     '△'],
+      ['7', 'Cash Conversion','94.2%', '95.0%', '-0.8pp', '✓'],
+    ],
+    totals: ['', 'Overall Score', '', '', '4/5 on target', ''],
+    selected: [2, 3],
+    bars: [80, 88, 65, 70, 92, 75],
+    sum: '4 / 5', avg: 'on target'
+  }
+};
+
+let activeSheet = 'pl';
+function renderSheet(key) {
+  const s = sheets[key];
+  document.getElementById('xl-ref').textContent = s.ref;
+  document.getElementById('xl-formula').textContent = s.formula;
+  document.getElementById('xl-sum').textContent = s.sum;
+  document.getElementById('xl-avg').textContent = s.avg;
+
+  // grid
+  const grid = document.getElementById('xl-grid');
+  grid.innerHTML = '';
+
+  // header row
+  const hRow = document.createElement('div');
+  hRow.className = 'xl-row';
+  s.headers.forEach((h, i) => {
+    const c = document.createElement('div');
+    c.className = 'xl-cell hdr';
+    c.textContent = h;
+    hRow.appendChild(c);
+  });
+  grid.appendChild(hRow);
+
+  // data rows
+  s.rows.forEach((row, ri) => {
+    const r = document.createElement('div');
+    r.className = 'xl-row';
+    row.forEach((val, ci) => {
+      const c = document.createElement('div');
+      const isSelected = ri === s.selected[0] && ci === s.selected[1];
+      const isNum = ci >= 2 && !val.includes('%') && !['✓','△'].includes(val);
+      const isFormula = ci === 5 && key === 'pl' && ri === 4;
+      c.className = 'xl-cell ' + (ci === 0 ? 'row-num' : ci === 1 ? 'label' : isFormula ? 'formula selected' : isSelected ? 'selected formula' : isNum ? 'num' : 'label');
+      c.textContent = val;
+      r.appendChild(c);
+    });
+    grid.appendChild(r);
+  });
+
+  // totals row
+  const tRow = document.createElement('div');
+  tRow.className = 'xl-row';
+  s.totals.forEach((v, i) => {
+    const c = document.createElement('div');
+    c.className = 'xl-cell ' + (i === 0 ? 'row-num' : i === 1 ? 'total-lbl' : 'total');
+    c.textContent = v;
+    tRow.appendChild(c);
+  });
+  grid.appendChild(tRow);
+
+  // mini chart
+  const chartEl = document.getElementById('xl-chart');
+  chartEl.innerHTML = '';
+  const maxB = Math.max(...s.bars);
+  s.bars.forEach(h => {
+    const bar = document.createElement('div');
+    bar.className = 'xl-mini-bar';
+    bar.style.height = '0%';
+    chartEl.appendChild(bar);
+    setTimeout(() => bar.style.height = Math.round(h / maxB * 100) + '%', 50);
+  });
+}
+
+function switchSheet(key) {
+  activeSheet = key;
+  document.querySelectorAll('.xl-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['pl','cf','kpi'][i] === key);
+  });
+  renderSheet(key);
+}
+
+renderSheet('pl');
+</script>
+</body>
+</html>
