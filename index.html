@@ -93,12 +93,208 @@
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
   .about-text p { font-size: 16px; line-height: 1.8; color: var(--ink2); font-weight: 300; margin-bottom: 1.25rem; }
   .about-text p strong { color: var(--ink); font-weight: 500; }
-  .about-skills { display: flex; flex-direction: column; gap: 1.25rem; }
-  .skill-row { display: flex; flex-direction: column; gap: 6px; }
-  .skill-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; color: var(--ink2); }
-  .skill-pct { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
-  .skill-bar { height: 3px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-  .skill-fill { height: 100%; background: var(--accent); border-radius: 99px; width: 0; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+  /* ── MEDIA GALLERY ── */
+  .media-gallery { display: flex; flex-direction: column; gap: 0; }
+
+  .gallery-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .gallery-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); }
+  .gallery-count { font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+
+  .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .gallery-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface2);
+    cursor: pointer;
+    border: 1px solid var(--surface2);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s, border-color 0.2s;
+    aspect-ratio: 16/10;
+  }
+  .gallery-item:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 14px 40px rgba(0,0,0,0.10); border-color: rgba(26,71,42,0.2); }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-item:hover .gallery-play { transform: translate(-50%,-50%) scale(1); }
+
+  /* Featured item spans both columns */
+  .gallery-item.gallery-featured { grid-column: span 2; aspect-ratio: 16/7; }
+
+  .gallery-item img,
+  .gallery-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Placeholder state (before real files are dropped in) */
+  .gallery-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--surface2);
+  }
+  .gallery-placeholder i { font-size: 22px; color: var(--ink3); opacity: 0.5; }
+  .gallery-placeholder-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); text-align: center; opacity: 0.65; line-height: 1.4; }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(14,14,14,0.55);
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 12px 14px;
+  }
+  .gallery-overlay-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .gallery-overlay-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    font-family: var(--mono);
+  }
+  .gallery-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) scale(0.85);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  .gallery-play i { font-size: 13px; color: var(--accent); margin-left: 2px; }
+  .gallery-play.gallery-play-hidden { display: none; }
+
+  /* Video badge */
+  .gallery-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 4px;
+    background: rgba(26,71,42,0.88);
+    color: rgba(255,255,255,0.9);
+    pointer-events: none;
+  }
+
+  /* ── LIGHTBOX ── */
+  .lb-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(10,10,10,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .lb-backdrop.lb-open { opacity: 1; pointer-events: all; }
+
+  .lb-inner {
+    position: relative;
+    max-width: min(90vw, 1100px);
+    max-height: 90vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lb-media {
+    width: 100%;
+    max-height: 78vh;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lb-media img,
+  .lb-media video {
+    max-width: 100%;
+    max-height: 78vh;
+    object-fit: contain;
+    display: block;
+    border-radius: 10px;
+  }
+
+  .lb-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+  }
+  .lb-title { font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,0.85); }
+  .lb-sub { font-size: 12px; color: rgba(255,255,255,0.4); font-family: var(--mono); margin-top: 2px; }
+  .lb-counter { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.35); }
+
+  .lb-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .lb-close:hover { background: rgba(255,255,255,0.2); }
+
+  .lb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.75);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .lb-nav:hover { background: rgba(255,255,255,0.2); }
+  .lb-nav.lb-prev { left: -56px; }
+  .lb-nav.lb-next { right: -56px; }
+  .lb-nav:disabled { opacity: 0.25; pointer-events: none; }
 
   /* PROJECTS */
   .projects { background: var(--surface); }
@@ -275,15 +471,16 @@
       <p class="hero-sub">I'm a Certified Public Accountant (CPA), licensed in the United States of America. I build the mechanisms that allow finance to work faster — by automating reporting pipelines, business intelligence dashboards, and AI-powered tools that replace manual efforts with just a few clicks.</p>
       <div class="hero-stats">
         <div>
+          <div class="hero-stat-label">Vision</div>
+          <div class="hero-stat-value">Finance<br>Optimization</div>
+        </div>
+        <div>
           <div class="hero-stat-label">Focus</div>
           <div class="hero-stat-value">Reporting &<br>Controlling</div>
         </div>
         <div>
           <div class="hero-stat-label">Credential</div>
           <div class="hero-stat-value">CPA - Active<br>(CPA041748)</div>
-        </div>
-        <div>
-          
         </div>
       </div>
     </div>
@@ -305,7 +502,7 @@
           <div class="cv-section-label">Experience</div>
           <div class="cv-item">
             <div class="cv-item-left">
-              <div class="cv-item-role">Audit (Associate)</div>
+              <div class="cv-item-role">Assurance - Audit (Associate)</div>
               <div class="cv-item-org">Ernst & Young (EY) · Atlanta, GA, US</div>
             </div>
             <div class="cv-item-date">2023–2024</div>
@@ -317,7 +514,7 @@
             </div>
             <div class="cv-item-date">2024–Present</div>
           </div>
-        </div>  
+        </div>
         
         <div class="cv-section">
           <div class="cv-section-label">Industries</div>
@@ -331,7 +528,7 @@
         </div>
       
         <div class="cv-section">
-          <div class="cv-section-label">Education</div>
+          <div class="cv-section-label">Education · Summa Cum Laude</div>
           <div class="cv-item">
             <div class="cv-item-left">
               <div class="cv-item-role">Bachelors in Business Administration (BBA)</div>
@@ -346,7 +543,7 @@
             </div>
             <div class="cv-item-date">2022–2023</div>
           </div>
-        </div>  
+        </div>
 
         <div class="cv-section" style="margin-bottom:0">
           <div class="cv-section-label">Core Skills</div>
@@ -365,12 +562,6 @@
       </div>
 
       <div class="cv-footer">
-        <!--
-          TO LINK YOUR REAL CV:
-          1. Upload your PDF to the GitHub repo root (e.g. "CV_Antonis_Karahannas.pdf")
-          2. Change href below from "CV_Antonis_Karahannas.pdf" to match the exact filename
-          3. The download attribute controls the filename saved to the user's device
-        -->
         <a href="CV_Antonis_Karahannas.pdf" target="_blank" class="cv-btn cv-btn-primary">
           <i class="fas fa-file-pdf" style="font-size:10px"></i> View CV
         </a>
@@ -398,38 +589,135 @@
       <p>So I learned to <strong>build the infrastructure</strong> around the work: Excel models, Power BI pipelines, Python automation, PWA apps, and RPA-AI agents that run on a schedule.</p>
       <p>The result is <strong>reporting that refreshes with a single click</strong>, insights delivered before you ask for them, and audit-ready consistency by design — not by luck.</p>
     </div>
-    <div class="about-skills">
-      <div class="skill-row">
-        <div class="skill-label"><span>Financial Reporting & Analysis</span><span class="skill-pct">95%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+
+    <!-- ══════════════════════════════════════════════
+         MEDIA GALLERY — replaces skill bars
+         
+         HOW TO USE:
+         Each .gallery-item can hold either:
+           • An <img> tag:   <img src="screenshots/my-dashboard.png" alt="...">
+           • A <video> tag:  <video src="recordings/my-demo.mp4" muted loop playsinline></video>
+         
+         Set data-title and data-sub on each .gallery-item for the lightbox caption.
+         Add class "gallery-featured" to any item to make it span full width.
+         Add class "gallery-video" to video items (shows a play icon badge).
+         
+         File placement: drop images/videos in your repo at the paths you reference.
+         Recommended folder structure:
+           /screenshots/   — .png or .jpg files
+           /recordings/    — .mp4 files
+         ══════════════════════════════════════════════ -->
+    <div class="media-gallery">
+      <div class="gallery-header">
+        <div class="gallery-label">Work samples</div>
+        <div class="gallery-count" id="gallery-count"></div>
       </div>
-      <div class="skill-row">
-        <div class="skill-label"><span>Excel — Modelling & Automation</span><span class="skill-pct">93%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-label"><span>Power BI & DAX</span><span class="skill-pct">88%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-label"><span>Data Modelling & ETL</span><span class="skill-pct">85%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-label"><span>Python Automation</span><span class="skill-pct">82%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-label"><span>AI Agent Development</span><span class="skill-pct">75%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
-      </div>
-      <div class="skill-row">
-        <div class="skill-label"><span>PWA / App Development</span><span class="skill-pct">70%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="70"></div></div>
-      </div>
-    </div>
+
+      <div class="gallery-grid" id="gallery-grid">
+
+        <!-- ① FEATURED — replace src with your real file -->
+        <div class="gallery-item gallery-featured"
+             data-title="Power BI Financial Dashboard"
+             data-sub="Automated reporting pipeline · FY2025"
+             data-type="image">
+          <img src="recordings/financial _reporting/Finance Dashboard.mp4" alt="Power BI Financial Dashboard"> -->
+          <div class="gallery-placeholder">
+            <i class="fas fa-image"></i>
+            <div class="gallery-placeholder-label">screenshots/powerbi-dashboard.png<br>or .mp4 video</div>
+          </div>
+          <div class="gallery-overlay">
+            <div class="gallery-overlay-title">Power BI Financial Dashboard</div>
+            <div class="gallery-overlay-sub">Automated reporting pipeline · FY2025</div>
+          </div>
+          <div class="gallery-play">
+            <i class="fas fa-expand"></i>
+          </div>
+        </div>
+
+        <!-- ② replace src with your real file -->
+        <div class="gallery-item"
+             data-title="Excel P&L Model"
+             data-sub="Dynamic arrays · Power Query · Financial modelling"
+             data-type="image">
+          <img src="screenshots/financial_reporting/Financial_Reporting_PowerBI_1.png" alt="Excel P&L Model"> -->
+          <div class="gallery-placeholder">
+            <i class="fas fa-image"></i>
+            <div class="gallery-placeholder-label">screenshots/excel-pl-model.png</div>
+          </div>
+          <div class="gallery-overlay">
+            <div class="gallery-overlay-title">Excel P&L Model</div>
+            <div class="gallery-overlay-sub">Dynamic arrays · Power Query</div>
+          </div>
+          <div class="gallery-play">
+            <i class="fas fa-expand"></i>
+          </div>
+        </div>
+
+        <!-- ③ VIDEO example — add class gallery-video for the badge -->
+        <div class="gallery-item gallery-video"
+             data-title="Investment Tracker — Live Demo"
+             data-sub="PWA · JavaScript · IndexedDB"
+             data-type="video">
+          <!-- SWAP IN: <video src="recordings/investment-tracker-demo.mp4" muted loop playsinline></video> -->
+          <div class="gallery-placeholder">
+            <i class="fas fa-film"></i>
+            <div class="gallery-placeholder-label">recordings/investment-tracker-demo.mp4</div>
+          </div>
+          <div class="gallery-badge">MP4</div>
+          <div class="gallery-overlay">
+            <div class="gallery-overlay-title">Investment Tracker Demo</div>
+            <div class="gallery-overlay-sub">PWA · JavaScript · IndexedDB</div>
+          </div>
+          <div class="gallery-play">
+            <i class="fas fa-play"></i>
+          </div>
+        </div>
+
+        <!-- ④ replace src with your real file -->
+        <div class="gallery-item"
+             data-title="AI Reporting Agent"
+             data-sub="Python · Claude API · SMTP scheduler"
+             data-type="image">
+          <img src="screenshots/financial_reporting/Financial_Reporting_PowerBI_2.png" alt="AI Reporting Agent"> -->
+          <div class="gallery-placeholder">
+            <i class="fas fa-image"></i>
+            <div class="gallery-placeholder-label">screenshots/agent-output.png</div>
+          </div>
+          <div class="gallery-overlay">
+            <div class="gallery-overlay-title">AI Reporting Agent</div>
+            <div class="gallery-overlay-sub">Python · Claude API · SMTP scheduler</div>
+          </div>
+          <div class="gallery-play">
+            <i class="fas fa-expand"></i>
+          </div>
+        </div>
+
+        <!-- ⑤ Add more items following the same pattern. Remove items you don't need. -->
+
+      </div><!-- /gallery-grid -->
+    </div><!-- /media-gallery -->
+
   </div>
 </section>
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lb-backdrop" id="lb-backdrop" role="dialog" aria-modal="true" aria-label="Media viewer">
+  <div class="lb-inner">
+    <button class="lb-close" id="lb-close" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+    <button class="lb-nav lb-next" id="lb-next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+    <div class="lb-media" id="lb-media"></div>
+    <div class="lb-info">
+      <div>
+        <div class="lb-title" id="lb-title"></div>
+        <div class="lb-sub" id="lb-sub"></div>
+      </div>
+      <div class="lb-counter" id="lb-counter"></div>
+    </div>
+  </div>
+</div>
 
 <!-- PROJECTS -->
 <section class="projects" id="projects">
@@ -714,14 +1002,6 @@
 </footer>
 
 <script>
-/* ── Skill bars ── */
-const skillObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.querySelectorAll('.skill-fill').forEach(f => f.style.width = f.dataset.width + '%');
-  });
-}, { threshold: 0.2 });
-document.querySelectorAll('.about-skills').forEach(el => skillObs.observe(el));
-
 /* ── Pipeline steps ── */
 const pipeObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
@@ -857,6 +1137,100 @@ function switchSheet(key) {
 }
 
 renderSheet('pl');
+
+/* ══════════════════════════════════════════════
+   GALLERY + LIGHTBOX
+   ══════════════════════════════════════════════ */
+(function() {
+  const items = Array.from(document.querySelectorAll('.gallery-item'));
+  const backdrop = document.getElementById('lb-backdrop');
+  const lbMedia  = document.getElementById('lb-media');
+  const lbTitle  = document.getElementById('lb-title');
+  const lbSub    = document.getElementById('lb-sub');
+  const lbCounter= document.getElementById('lb-counter');
+  const lbClose  = document.getElementById('lb-close');
+  const lbPrev   = document.getElementById('lb-prev');
+  const lbNext   = document.getElementById('lb-next');
+  let current = 0;
+
+  /* Count visible items for header */
+  document.getElementById('gallery-count').textContent = items.length + ' samples';
+
+  /* Video hover autoplay */
+  items.forEach(item => {
+    const vid = item.querySelector('video');
+    if (vid) {
+      item.addEventListener('mouseenter', () => vid.play());
+      item.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+    }
+    item.addEventListener('click', () => openLightbox(items.indexOf(item)));
+  });
+
+  function openLightbox(idx) {
+    current = idx;
+    renderLB();
+    backdrop.classList.add('lb-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    /* Pause any playing video */
+    const vid = lbMedia.querySelector('video');
+    if (vid) vid.pause();
+    backdrop.classList.remove('lb-open');
+    document.body.style.overflow = '';
+  }
+
+  function renderLB() {
+    const item = items[current];
+    const type  = item.dataset.type || 'image';
+    const title = item.dataset.title || '';
+    const sub   = item.dataset.sub   || '';
+
+    lbMedia.innerHTML = '';
+
+    /* Clone real media if present, else show placeholder message */
+    const realMedia = item.querySelector('img, video');
+    if (realMedia) {
+      const clone = realMedia.cloneNode(true);
+      if (clone.tagName === 'VIDEO') {
+        clone.controls = true;
+        clone.autoplay = true;
+        clone.muted = true;
+        clone.loop = true;
+      }
+      lbMedia.appendChild(clone);
+    } else {
+      /* No real file yet — show a clean placeholder */
+      const ph = document.createElement('div');
+      ph.style.cssText = 'padding:3rem;text-align:center;color:rgba(255,255,255,0.35);font-family:var(--mono);font-size:13px;line-height:2';
+      const label = item.querySelector('.gallery-placeholder-label');
+      ph.innerHTML = (type === 'video' ? '🎬' : '🖼') + '<br>Drop your file at:<br><span style="color:rgba(255,255,255,0.6)">' + (label ? label.textContent.trim() : 'your/file/path') + '</span>';
+      lbMedia.appendChild(ph);
+    }
+
+    lbTitle.textContent   = title;
+    lbSub.textContent     = sub;
+    lbCounter.textContent = (current + 1) + ' / ' + items.length;
+    lbPrev.disabled = current === 0;
+    lbNext.disabled = current === items.length - 1;
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', () => { if (current > 0) { current--; renderLB(); }});
+  lbNext.addEventListener('click', () => { if (current < items.length - 1) { current++; renderLB(); }});
+
+  /* Close on backdrop click */
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeLightbox(); });
+
+  /* Keyboard nav */
+  document.addEventListener('keydown', e => {
+    if (!backdrop.classList.contains('lb-open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft'  && current > 0)               { current--; renderLB(); }
+    if (e.key === 'ArrowRight' && current < items.length - 1) { current++; renderLB(); }
+  });
+})();
 </script>
 </body>
 </html>
